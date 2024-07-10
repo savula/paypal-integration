@@ -2,21 +2,49 @@ window.paypal
   .Buttons({
     async createOrder() {
       try {
-        const response = await fetch("/api/orders", {
+        const response = await fetch("http://localhost:5000/paypal/createOrder", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           // use the "body" param to optionally pass additional order information
           // like product ids and quantities
-          body: JSON.stringify({
-            cart: [
-              {
-                id: "YOUR_PRODUCT_ID",
-                quantity: "YOUR_PRODUCT_QUANTITY",
+          // body: JSON.stringify({
+          //   cart: [
+          //     {
+          //       id: "YOUR_PRODUCT_ID",
+          //       quantity: "YOUR_PRODUCT_QUANTITY",
+          //     },
+          //   ],
+          // }),
+          body: JSON.stringify(
+            {
+              reference_id: "internalId",
+              invoice_id: "invoice_id",
+              amount: {
+                currencyCode: "USD",
+                value: 110.00
               },
-            ],
-          }),
+              brand_name: "BFL",
+              return_url: "https://www.beallsflorida.com/review",
+              cancel_url: "https://www.beallsflorida.com/billing",
+              address: {
+                  address_line_1: "123 Main St",
+                  address_line_2: "Apt # 101",
+                  city: "Fairfax",
+                  state: "VA",
+                  postal_code: "20144",
+                  country_code: "US"
+              },
+              cart: [
+                {
+                  id: "YOUR_PRODUCT_ID",
+                  quantity: 1
+                }
+              ]
+            }
+        ),
+
         });
 
         const orderData = await response.json();
@@ -38,11 +66,15 @@ window.paypal
     },
     async onApprove(data, actions) {
       try {
-        const response = await fetch(`/api/orders/${data.orderID}/capture`, {
+        // const response = await fetch(`/api/orders/${data.orderID}/capture`, {
+        const response = await fetch(`http://localhost:5000/paypal/authorize`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
+          body: JSON.stringify(
+            {}
+          )
         });
 
         const orderData = await response.json();
