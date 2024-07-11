@@ -2,16 +2,27 @@ import express from "express";
 import fetch from "node-fetch";
 import "dotenv/config";
 import path from "path";
+import morgan from "morgan";
+import { createProxyMiddleware, fixRequestBody } from "http-proxy-middleware";
 
 const { PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET, PORT = 8888 } = process.env;
 const base = "https://api-m.sandbox.paypal.com";
 const app = express();
+
 
 // host static files
 app.use(express.static("client"));
 
 // parse post params sent in body in json format
 app.use(express.json());
+
+app.use(morgan('dev'));
+
+app.use('/paypal', createProxyMiddleware({
+  target: "http://localhost:5000",
+  changeOrigin: true,
+  onProxyReq: fixRequestBody
+}));
 
 /**
  * Generate an OAuth 2.0 access token for authenticating with PayPal REST APIs.
