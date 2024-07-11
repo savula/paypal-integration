@@ -6,6 +6,7 @@ window.paypal
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            "Authorization": "Basic YXBpdXNlcjp0YXN0eWxhbG1hc3NAMTE1NA=="
           },
           // use the "body" param to optionally pass additional order information
           // like product ids and quantities
@@ -35,13 +36,7 @@ window.paypal
                   state: "VA",
                   postal_code: "20144",
                   country_code: "US"
-              },
-              cart: [
-                {
-                  id: "YOUR_PRODUCT_ID",
-                  quantity: 1
-                }
-              ]
+              }
             }
         ),
 
@@ -71,6 +66,7 @@ window.paypal
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            "Authorization": "Basic YXBpdXNlcjp0YXN0eWxhbG1hc3NAMTE1NA=="
           },
           body: JSON.stringify(
             {}
